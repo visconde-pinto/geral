@@ -17,7 +17,6 @@ local DEFAULTS = {
     Keybind = Enum.KeyCode.F9,
     SpamKeybind = Enum.KeyCode.F,
     SpamMode = "Toggle",
-    ClashBallVisible = false,
 }
 local function cloneDefaults()
     local result = {}
@@ -33,9 +32,7 @@ function Config.validate(config)
     if type(config) ~= "table" then
         return false, "configuração não é uma tabela"
     end
-    if type(config.AutoParry) ~= "boolean"
-        or type(config.ClashBallVisible) ~= "boolean"
-    then
+    if type(config.AutoParry) ~= "boolean" then
         return false, "flags booleanas inválidas"
     end
     if not isFiniteNumber(config.CPS)
