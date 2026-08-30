@@ -23,7 +23,6 @@ local UIState = {
 local setSpam
 local screenGui
 local floatingButton
-local clashBall
 local miniGui
 local configPanel
 local particleLayer
@@ -307,23 +306,6 @@ local function btnPos()
     end
     return UDim2.new(1, -70, 0.5, -28)
 end
-local CLASH_SIZE = 64
-local OFFSCREEN_X = -CLASH_SIZE - 40
-
--- clash ui
-local function showClashBall(v)
-    setConfigValue("ClashBallVisible", v)
-    local config = Utils.getConfig()
-    local clashX = config.ClashBallX or 14
-    local clashY = config.ClashBallY or (viewport().Y / 2 - CLASH_SIZE / 2)
-    twPlay(
-        clashBall,
-        (v and 0.22) or 0.18,
-        {Position = v and UDim2.new(0, clashX, 0, clashY) or UDim2.new(0, OFFSCREEN_X, 0, clashY)},
-        v and EASE_BACK or EASE_OUT,
-        DIR_OUT
-    )
-end
 local MINI_W, MINI_H = 120, 90
 local function showMini(v, visBtn)
     local config = Utils.getConfig()
@@ -411,7 +393,6 @@ local function cleanupUI()
     end
     screenGui = nil
     floatingButton = nil
-    clashBall = nil
     miniGui = nil
     configPanel = nil
     particleLayer = nil
@@ -978,26 +959,6 @@ function EminenceUI.setup(deps)
         twPlay(floatingStroke, 0.42, {Transparency = 0}, EASE_OUT, DIR_OUT)
     end)
     local config = Utils.getConfig()
-    local clashX = config.ClashBallX or 14
-    local clashY = config.ClashBallY or (viewport().Y / 2 - CLASH_SIZE / 2)
-    clashBall =
-        inst(
-        "TextLabel",
-        {
-            Name = "EminenceClashBall",
-            Size = UDim2.new(0, CLASH_SIZE, 0, CLASH_SIZE),
-            Position = UDim2.new(0, OFFSCREEN_X, 0.5, -CLASH_SIZE / 2),
-            BackgroundColor3 = C.accent,
-            Text = "B",
-            TextColor3 = Color3.new(1, 1, 1),
-            TextSize = 26,
-            Font = Enum.Font.GothamBold,
-            ZIndex = 8,
-            Parent = screenGui
-        }
-    )
-    corner(clashBall, 999)
-    stroke(clashBall, Color3.new(0, 0, 0), 2)
     UIState.btnIsDragging =
         makeDraggable(
         floatingButton,
@@ -1015,14 +976,6 @@ function EminenceUI.setup(deps)
             togglePanel()
         end
     ))
-    makeDraggable(
-        clashBall,
-        clashBall,
-        function()
-            setConfigValue("ClashBallX", clashBall.Position.X.Offset)
-            setConfigValue("ClashBallY", clashBall.Position.Y.Offset)
-        end
-    )
     local miniX = config.MiniX or (viewport().X - MINI_W - 14)
     local miniY = config.MiniY or (viewport().Y / 2 - MINI_H / 2)
     local MINI_OFF_X = viewport().X + 30
@@ -1297,16 +1250,10 @@ function EminenceUI.setup(deps)
     ))
     local yL = 4
     yL = createToggleCard("Auto Parry", "AutoParry", yL, colLeft)
-    yL = createToggleCard("Mostrar Bola", "ClashBallVisible", yL, colLeft, function(v)
-        showClashBall(v)
-    end)
     local yR = 4
     yR = createRateSelector(yR, colRight)
     yR = createKeybindSelector(yR, colRight)
     yR = createSpamCard(yR, colRight)
-    if config.ClashBallVisible then
-        clashBall.Position = UDim2.new(0, clashX, 0, clashY)
-    end
     setSpam(Utils.isManualSpamActive())
     return true
 end
