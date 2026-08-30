@@ -21,9 +21,7 @@ local SPAM_RATE_MAX = 5000000000
 local MAX_DIAGNOSTIC_ENTRIES = 32
 local DATA_FOLDER = "Eminence Hub"
 local function isValidConfigValue(key, value)
-    if key == "AutoParry"
-        or key == "ClashBallVisible"
-    then
+    if key == "AutoParry" then
         return type(value) == "boolean"
     end
     if key == "CPS" or key == "CPF" then
