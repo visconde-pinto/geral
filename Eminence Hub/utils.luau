@@ -9,7 +9,7 @@ local RunServiceService = game:GetService("RunService")
 local WorkspaceService = game:GetService("Workspace")
 
 -- metadata
-local SCRIPT_VERSION = "1.0.0"
+local SCRIPT_VERSION = "1.1.0"
 local API_VERSION = 1
 local SCRIPT_NAME = "Eminence Hub"
 local INTERNAL_NAME = "Eminence"
